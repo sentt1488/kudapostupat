@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Куда пойти после 9 и 11 класса?</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+:root {
+  --bg: #0f0f13; --card: #1a1a24; --text: #fff; --muted: #a0a0b0;
+  --accent: #7b61ff; --accent2: #9b85ff; --ok: #4caf50; --bad: #f44336;
+}
+* { box-sizing: border-box; }
+body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; padding: 0;
+  background: var(--bg); color: var(--text); line-height: 1.6; scroll-behavior: smooth; }
+header { text-align: center; padding: 60px 20px;
+  background: linear-gradient(135deg, #1a1a24 0%, #2a2a3a 100%);
+  border-bottom: 2px solid var(--accent); }
+h1 { font-size: 2.3rem; margin: 0 0 10px; }
+.subtitle { color: var(--muted); font-size: 1.1rem; max-width: 800px; margin: 0 auto; }
+.container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+#map { height: 400px; width: 100%; border-radius: 14px; margin: 40px 0; border: 1px solid #2a2a3a; z-index: 1; }
+.section-title { text-align: center; margin-top: 60px; color: var(--accent); font-size: 1.7rem; }
+.section-subtitle { text-align: center; color: var(--muted); margin-bottom: 30px; max-width: 700px; margin: 0 auto 30px; }
+.filters { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+.filter-btn { background: var(--card); color: var(--text); border: 1px solid #2a2a3a;
+  padding: 10px 20px; border-radius: 20px; cursor: pointer; transition: all 0.3s; font-size: 0.9rem; }
+.filter-btn:hover, .filter-btn.active { background: var(--accent); border-color: var(--accent); }
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+.card { background: var(--card); border-radius: 14px; padding: 22px; border: 1px solid #2a2a3a;
+  transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s; display: flex; flex-direction: column; }
+.card:hover { transform: translateY(-6px); box-shadow: 0 15px 30px rgba(123,97,255,0.15); border-color: var(--accent); }
+.card h3 { margin-top: 0; color: var(--accent); font-size: 1.1rem; }
+.card p { color: var(--muted); font-size: 0.92rem; margin: 5px 0; }
+.salary { color: var(--ok); font-weight: bold; font-size: 0.92rem; margin: 10px 0 5px; }
+.card .tag { display: inline-block; background: rgba(123,97,255,0.15); color: var(--accent);
+  padding: 4px 10px; border-radius: 6px; font-size: 0.78rem; margin-top: 8px; margin-right: 5px; align-self: flex-start; }
+.quiz-container, .game-container { background: var(--card); border-radius: 14px;
+  padding: 30px; border: 1px solid #2a2a3a; margin-top: 30px; }
+.quiz-question { margin-bottom: 22px; padding-bottom: 12px; border-bottom: 1px solid #2a2a3a; }
+.quiz-question p { font-weight: bold; margin-bottom: 10px; }
+.quiz-options label { display: block; background: #22222e; padding: 12px 16px;
+  margin-bottom: 8px; border-radius: 10px; cursor: pointer; transition: all 0.2s;
+  border: 1px solid #2a2a3a; font-size: 0.95rem; }
+.quiz-options label:hover { background: #2a2a3a; border-color: var(--accent); }
+.quiz-options input[type="radio"] { margin-right: 10px; accent-color: var(--accent); }
+.name-input { width: 100%; padding: 14px 18px; font-size: 1rem; background: #22222e;
+  color: var(--text); border: 1px solid #2a2a3a; border-radius: 10px; margin-bottom: 20px; outline: none; }
+.name-input:focus { border-color: var(--accent); }
+#quiz-result { display: none; margin-top: 30px; padding: 25px;
+  background: linear-gradient(135deg, rgba(123,97,255,0.1), rgba(123,97,255,0.05));
+  border: 1px solid var(--accent); border-radius: 14px; }
+#quiz-result h3 { color: var(--accent); margin-top: 0; }
+.submit-btn { background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: white; border: none; padding: 14px 34px; border-radius: 25px;
+  cursor: pointer; font-size: 1rem; font-weight: bold; transition: transform 0.3s, box-shadow 0.3s; }
+.submit-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(123,97,255,0.3); }
+.submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.save-status { margin-top: 15px; font-size: 0.95rem; }
+.emoji-game { text-align: center; }
+.emoji-display { font-size: 4rem; margin: 20px 0; letter-spacing: 10px; animation: bounce 1s infinite alternate; }
+@keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-8px); } }
+.game-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-top: 20px; }
+.game-option { background: #22222e; border: 1px solid #2a2a3a; padding: 14px;
+  border-radius: 10px; cursor: pointer; transition: all 0.2s; color: var(--text); font-size: 0.95rem; }
+.game-option:hover { background: #2a2a3a; border-color: var(--accent); }
+.game-option.correct { background: var(--ok) !important; border-color: var(--ok) !important; }
+.game-option.wrong { background: var(--bad) !important; border-color: var(--bad) !important; }
+.game-score { font-size: 1.1rem; color: var(--accent); font-weight: bold; margin-top: 15px; }
+.game-feedback { margin-top: 15px; font-size: 1.1rem; font-weight: bold; min-height: 30px; }
+footer { text-align: center; padding: 40px 20px; margin-top: 80px;
+  border-top: 1px solid #2a2a3a; color: var(--muted); font-size: 0.9rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Куда пойти после 9 и 11 класса?</h1>
+  <p class="subtitle">Полный каталог колледжей и вузов Ростовской области с указанием общежитий и зарплат по региону на 2026 год.</p>
+</header>
+
+<div class="container">
+  <h2 class="section-title">🗺️ Карта учебных заведений</h2>
+  <div id="map"></div>
+
+  <h2 class="section-title">🎓 Каталог возможностей</h2>
+  <div class="filters">
+    <button class="filter-btn active" onclick="filterCards('all','all',event)">Все</button>
+    <button class="filter-btn" onclick="filterCards('college','all',event)">Колледжи</button>
+    <button class="filter-btn" onclick="filterCards('university','all',event)">Вузы</button>
+  </div>
+  <div class="filters">
+    <button class="filter-btn city-btn active" onclick="filterCards('all','all',event)">Все города</button>
+    <button class="filter-btn city-btn" onclick="filterCards('all','Белая Калитва',event)">Белая Калитва</button>
+    <button class="filter-btn city-btn" onclick="filterCards('all','Новочеркасск',event)">Новочеркасск</button>
+    <button class="filter-btn city-btn" onclick="filterCards('all','Шахты',event)">Шахты</button>
+    <button class="filter-btn city-btn" onclick="filterCards('all','Каменск-Шахтинский',event)">Каменск</button>
+    <button class="filter-btn city-btn" onclick="filterCards('all','Таганрог',event)">Таганрог</button>
+    <button class="filter-btn city-btn" onclick="filterCards('all','Шолоховский район',event)">Шолоховский</button>
+    <button class="filter-btn city-btn" onclick="filterCards('all','Ростов-на-Дону',event)">Ростов</button>
+  </div>
+
+  <div class="cards-grid" id="cardsGrid">
+
+    <div class="card" data-category="college" data-city="Белая Калитва">
+      <h3>Белокалитвинский гуманитарно-индустриальный техникум (БГИТ)</h3>
+      <p><strong>Город:</strong> Белая Калитва</p>
+      <p><strong>Специальности:</strong> Экономика, Соцработа, Электрооборудование, Автосервис.</p>
+      <p class="salary"><strong>Средняя зарплата:</strong> 35 000 – 60 000 ₽</p>
+      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+    </div>
+    <div class="card" data-category="college" data-city="Белая Калитва">
+      <h3>Белокалитвинский технологический техникум (БТТ)</h3>
+      <p><strong>Город:</strong> Белая Калитва</p>
+      <p><strong>Специальности:</strong> Сварщик, Повар-кондитер, Дошкольное образование.</p>
+      <p class="salary"><strong>Средняя зарплата:</strong> 40 000 – 70 000 ₽</p>
+      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+    </div>
+    <div class="card" data-category="college" data-city="Белая Калитва">
+      <h3>Белокалитвинский казачий кадетский техникум</h3>
+      <p><strong>Город:</strong> Белая Калитва</p>
+      <p><strong>Специальности:</strong> Повар-кондитер, Сельхозпроизводство.</p>
+      <p class="salary"><strong>Средняя зарплата:</strong> 30 000 – 50 000 ₽</p>
+      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+    </div>
+
+    <div class="card" data-category="college" data-city="Новочеркасск">
+      <h3>Новочеркасский промышленно-гуманитарный колледж (НПГК)</h3>
+      <p><strong>Город:</strong> Новочеркасск</p>
+      <p><strong>Специальности:</strong> Дизайн, Педагогика, Машиностроение, Экономика.</p>
+      <p class="salary"><strong>Средняя зарплата:</strong> 35 000 – 55 000 ₽</p>
+      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+    </div>
+    <div class="card" data-category="college" data-city="Новочеркасск">
+      <h3>Донской строительный колледж (ДСК)</h3>
+      <p><strong>Город:</strong> Новочеркасск</p>
+      <p><strong>Специальности:</strong> Архитектура, Строительство, Экономика.</p>
+      <p class="salary"><strong>Средняя зарплата:</strong> 40 000 – 65 000 ₽</p>
+      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+    </div>
+    <div class="card" data-category="college" data-city="Новочеркасск">
+      <h3>Новочеркасский машиностроительный колледж (НМК)</h3>
+      <p><strong>Город:</strong> Новочеркасск</p>
+      <p><strong>Специальности:</strong> Аддитивные технологии, Сисадмин, Электроснабжение.</p>
+      <p class="salary"><strong>Средняя зарплата:</strong> 40 000 – 70 000 ₽</p>
+      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+    </div>
+    <div class="card" data-category="university" data-city="Новочеркасск">
+      <h3>Новочеркасский политехнический колледж ЮРГПУ (НПИ)</h3>
+      <p><strong>Город:</strong> Новочеркасск</p>
+      <p><strong>Специальности:</strong> Дизайн, Экономика, Программирование.</p>
+      <p class="salary"><strong>Средняя зарплата:</strong> 45 000 – 80 000 ₽</p>
+      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+    </div>
+
+    <div class="card" data-category="college" data-city="Шахты">
+      <h3>Шахтинский политехнический колледж (ШПК)</h3>
+      <p><strong>Город:</strong> Шахты</p>
+      <p><strong>Специальности:</strong> Машиностроение, ЧПУ, Повар-кондитер.</p>
+      <p class="salary"><strong>Средняя зарплата:</strong> 35 000 – 60 000 ₽</p>
+      <span class="tag">Бюджет</span>
+    </div>
+    <div class="card" data-category="college" data-city="Шахты">
+      <h3>Шахтинский колледж топлива и энергетики (ШРКТЭ)</h3>
+      <p><strong>Город:</strong> Шахты</p>
+      <p><strong>Специальности:</strong> Электрооборудование, Автоматизация.</p>
+      <p class="salary"><strong>Средняя зарплата:</strong> 40 000 – 75 000 ₽</p>
+      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+    </div>
+    <div class="card" data-category="college" data-city="Шахты">
+      <h3>Шахтинский техникум дизайна и сервиса «Дон-Текс»</h3>
+      <p><strong>Город:</strong> Шахты</p>
+      <p><strong>Специальности:</strong> Почта, Сварщик, Парикмахер, Портной.</p>
+      <p class="salary"><strong>Средняя зарплата:</strong> 25 000 – 45 000 ₽</p>
+      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+    </div>
+    <div class="card" data-category="college" data-city="Шахты">
+      <h3>Шахтинский медицинский колледж</h3>
+      <p><strong>Город:</strong> Шахты</p>
+      <p><strong>Специальности:</strong> Сестринское дело, Лечебное дело, Акушерство.</p>
+      <p class="salary"><strong>Средняя зарплата:</strong> 35 000 – 60 000 ₽</p>
+      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+    </div>
+    <div class="card" data-category="university" data-city="Шахты">
+      <h3>Институт сферы обслуживания (филиал ДГТУ)</h3>
+      <p><strong>Город:</strong> Шахты</p>
+      <p><strong>Специальности:</strong> Экономика, Страховое дело, Гостиничный сервис.</p>
+      <p class="salary"><strong>Средняя зарплата:</strong> 35 000 – 65 000 ₽</p>
+      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+    </div>
+
+    <div class="card" data-category="college" data-city="Каменск-Шахтинский">
+      <h3>Каменск-Шахтинский медицинский колледж</h3>
+      <p><strong>Город:</strong> Каменск-Шахтинский</p>
+      <p><strong>Специальности:</strong> Лечебное дело, Сестринское дело, Фармация.</p>
+      <p class="salary"><strong>Средняя зарплата:</strong> 35 000 – 55 000 ₽</p>
+      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+    </div>
+    <div class="card" data-category="college" data-city="Каменск-Шахтинский">
+      <h3>Каменский педагогический колледж (КамПК)</h3>
+      <p><strong>Город:</strong> Каменск-Шахтинский</p>
+      <p><strong>Специальности:</strong> Начальные классы, Дошкольное, Физкультура.</p>
+      <p class="salary"><strong>Средняя зарплата:</strong> 30 000 – 50 000 ₽</p>
+      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+    </div>
+    <div class="card" data-category="college" data-city="Каменск-Шахтинский">
+      <h3>Каменский техникум строительства и автосервиса (КТСиА)</h3>
+      <p><strong>Город:</strong> Каменск-Шахтинский</p>
+      <p><strong>Специальности:</strong> Строительство, Автосервис.</p>
+      <p class="salary"><strong>Средняя зарплата:</strong> 40 000 – 65 000 ₽</p>
+      <span class="tag">Бюджет</span>
+    </div>
+    <div class="card" data-category="college" data-city="Каменск-Шахтинский">
+      <h3>Каменский химико-механический техникум (КХМТ)</h3>
+      <p><strong>Город:</strong> Каменск-Шахтинский</p>
+      <p><strong>Специальности:</strong> Машиностроение, Химтехнология, Электроснабжение.</p>
+      <p class="salary"><strong>Средняя зарплата:</strong> 40 000 – 70 000 ₽</p>
+      <span class="tag">Бюджет</span>
+    </div>
+    <div class="card" data-category="university" data-city="Каменск-Шахтинский">
+      <h3>Лиховской техникум железнодорожного транспорта</h3>
+      <p><strong>Город:</strong> Каменск-Шахтинский</p>
+      <p><strong>Специальности:</strong> Подвижной состав, Организация перевозок.</p>
+      <p class="salary"><strong>Средняя зарплата:</strong> 40 000 – 70 000 ₽</p>
+      <span class="tag">Бюджет</span>
+    </div>
+
+    <div class="card" data-category="college" data-city="Таганрог">
+      <h3>Таганрогский техникум «Тагмет»</h3>
+      <p><strong>Город:</strong> Таганрог</p>
+      <p><strong>Специальности:</strong> Машиностроение, Сварка, Металлургия.</p>
+      <p class="salary"><strong>Средняя зарплата:</strong> 45 000 – 80 000 ₽</p>
+      <span class="tag">Бюджет</span>
+    </div>
+    <div class="card" data-category="college" data-city="Таганрог">
+      <h3>Таганрогский авиационный колледж им. Петлякова</h3>
+      <p><strong>Город:</strong> Таганрог</p>
+      <p><strong>Специальности:</strong> Авиация, Машиностроение, Аддитивные технологии.</p>
+      <p class="salary"><strong>Средняя зарплата:</strong> 50 000 – 90 000 ₽</p>
+      <span class="tag">Бюджет</span>
+    </div>
+    <div class="card" data-category="college" data-city="Таганрог">
+      <h3>Таганрогский колледж морского приборостроения (ТКМП)</h3>
+      <p><strong>Город:</strong> Таганрог</p>
+      <p><strong>Специальности:</strong> Компьютерные системы, Радиоаппаратостроение.</p>
+      <p class="salary"><strong>Средняя зарплата:</strong> 45 000 – 80 000 ₽</p>
+      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+    </div>
+    <div class="card" data-category="college" data-city="Таганрог">
+      <h3>Таганрогский механический колледж (ТМехК)</h3>
+      <p><strong>Город:</strong> Таганрог</p>
+      <p><strong>Специальности:</strong> Автомобилестроение, Торговое дело.</p>
+      <p class="salary"><strong>Средняя зарплата:</strong> 40 000 – 70 000 ₽</p>
+      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+    </div>
+    <div class="card" data-category="university" data-city="Таганрог">
+      <h3>Политехнический колледж ДГТУ (Таганрог)</h3>
+      <p><strong>Город:</strong> Таганрог</p>
+      <p><strong>Специальности:</strong> Информационные системы, Физкультура, Экономика.</p>
+      <p class="salary"><strong>Средняя зарплата:</strong> 45 000 – 85 000 ₽</p>
+      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+    </div>
+
+    <div class="card" data-category="college" data-city="Шолоховский район">
+      <h3>Вешенский педагогический колледж им. Шолохова</h3>
+      <p><strong>Город:</strong> ст. Вешенская</p>
+      <p><strong>Специальности:</strong> Начальные классы, Дошкольное, Физкультура.</p>
+      <p class="salary"><strong>Средняя зарплата:</strong> 30 000 – 50 000 ₽</p>
+      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+    </div>
+    <div class="card" data-category="college" data-city="Шолоховский район">
+      <h3>БТТ (р.п. Шолоховский)</h3>
+      <p><strong>Город:</strong> р.п. Шолоховский</p>
+      <p><strong>Специальности:</strong> Сварщик, Повар-кондитер, Строитель.</p>
+      <p class="salary"><strong>Средняя зарплата:</strong> 35 000 – 55 000 ₽</p>
+      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+    </div>
+
+    <div class="card" data-category="university" data-city="Ростов-на-Дону">
+      <h3>Южный федеральный университет (ЮФУ)</h3>
+      <p><strong>Город:</strong> Ростов-на-Дону</p>
+      <p><strong>Направления:</strong> IT, Инженерия, Педагогика, Экономика.</p>
+      <p class="salary"><strong>Средняя зарплата:</strong> 60 000 – 150 000 ₽</p>
+      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+    </div>
+    <div class="card" data-category="university" data-city="Ростов-на-Дону">
+      <h3>Донской государственный технический университет (ДГТУ)</h3>
+      <p><strong>Город:</strong> Ростов-на-Дону</p>
+      <p><strong>Направления:</strong> Машиностроение, Строительство, IT, Дизайн.</p>
+      <p class="salary"><strong>Средняя зарплата:</strong> 55 000 – 140 000 ₽</p>
+      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+    </div>
+    <div class="card" data-category="university" data-city="Ростов-на-Дону">
+      <h3>Ростовский государственный медицинский университет (РостГМУ)</h3>
+      <p><strong>Город:</strong> Ростов-на-Дону</p>
+      <p><strong>Направления:</strong> Лечебное дело, Педиатрия, Стоматология.</p>
+      <p class="salary"><strong>Средняя зарплата:</strong> 90 000 – 110 000 ₽</p>
+      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+    </div>
+    <div class="card" data-category="university" data-city="Ростов-на-Дону">
+      <h3>Ростовский государственный экономический университет (РИНХ)</h3>
+      <p><strong>Город:</strong> Ростов-на-Дону</p>
+      <p><strong>Направления:</strong> Экономика, Финансы, Менеджмент, IT.</p>
+      <p class="salary"><strong>Средняя зарплата:</strong> 50 000 – 120 000 ₽</p>
+      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+    </div>
+    <div class="card" data-category="university" data-city="Ростов-на-Дону">
+      <h3>Ростовский государственный университет путей сообщения (РГУПС)</h3>
+      <p><strong>Город:</strong> Ростов-на-Дону</p>
+      <p><strong>Направления:</strong> Железнодорожные, Логистика, IT.</p>
+      <p class="salary"><strong>Средняя зарплата:</strong> 50 000 – 110 000 ₽</p>
+      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+    </div>
+
+    <div class="card" data-category="college" data-city="Ростов-на-Дону">
+      <h3>Ростовский-на-Дону колледж связи и информатики (РКСИ)</h3>
+      <p><strong>Город:</strong> Ростов-на-Дону</p>
+      <p><strong>Специальности:</strong> Программирование, Сети связи.</p>
+      <p class="salary"><strong>Средняя зарплата:</strong> 45 000 – 90 000 ₽</p>
+      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+    </div>
+    <div class="card" data-category="college" data-city="Ростов-на-Дону">
+      <h3>Донской педагогический колледж (ДПК)</h3>
+      <p><strong>Город:</strong> Ростов-на-Дону</p>
+      <p><strong>Специальности:</strong> Начальные классы, Дошкольное.</p>
+      <p class="salary"><strong>Средняя зарплата:</strong> 30 000 – 55 000 ₽</p>
+      <span class="tag">Бюджет</span>
+    </div>
+    <div class="card" data-category="college" data-city="Ростов-на-Дону">
+      <h3>Ростовский колледж технологий машиностроения (РКТМ)</h3>
+      <p><strong>Город:</strong> Ростов-на-Дону</p>
+      <p><strong>Специальности:</strong> Машиностроение, Сварка, ЧПУ.</p>
+      <p class="salary"><strong>Средняя зарплата:</strong> 40 000 – 75 000 ₽</p>
+      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+    </div>
+    <div class="card" data-category="college" data-city="Ростов-на-Дону">
+      <h3>Ростовский строительный колледж (РСК)</h3>
+      <p><strong>Город:</strong> Ростов-на-Дону</p>
+      <p><strong>Специальности:</strong> Строительство, Архитектура.</p>
+      <p class="salary"><strong>Средняя зарплата:</strong> 40 000 – 70 000 ₽</p>
+      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+    </div>
+
+  </div>
+
+  <h2 class="section-title">🧭 Профориентационный тест</h2>
+  <p class="section-subtitle">Введи имя, ответь на 10 вопросов — результат сохранится автоматически.</p>
+  <div class="quiz-container">
+    <input type="text" class="name-input" id="studentName" placeholder="Введи своё имя и фамилию" maxlength="50">
+    <div id="quiz-form"></div>
+    <button class="submit-btn" id="quizSubmitBtn" onclick="calculateQuizResult()">Узнать результат</button>
+    <div id="quiz-result">
+      <h3>Твой результат, <span id="resultName"></span>:</h3>
+      <p id="result-text"></p>
+      <p id="result-recommendation" style="color:var(--accent); font-weight:bold;"></p>
+      <p class="save-status" id="saveStatus"></p>
+    </div>
+  </div>
+
+  <h2 class="section-title">🎯 Угадай профессию по эмодзи</h2>
+  <div class="game-container emoji-game">
+    <div class="emoji-display" id="emojiDisplay">👨‍🍳🍳</div>
+    <div class="game-options" id="gameOptions"></div>
+    <div class="game-feedback" id="gameFeedback"></div>
+    <div class="game-score">Счёт: <span id="gameScore">0</span> / <span id="gameTotal">0</span></div>
+    <button class="submit-btn" id="nextBtn" onclick="nextEmojiQuestion()" style="display:none; margin-top:20px;">Следующий →</button>
+  </div>
+</div>
+
+<footer>
+  <p>Индивидуальный проект выпускника 2026 года.</p>
+</footer>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAjEK7YkBYywy60wTihX-AKaagEfy9pdvc",
+    authDomain: "profkarta-belaya-kalitva.firebaseapp.com",
+    databaseURL: "https://profkarta-belaya-kalitva-default-rtdb.firebaseio.com",
+    projectId: "profkarta-belaya-kalitva",
+    storageBucket: "profkarta-belaya-kalitva.firebasestorage.app",
+    messagingSenderId: "184191853055",
+    appId: "1:184191853055:web:1f4801bcb00e0ffa15c7ca"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  window.saveResultToFirebase = async function(name, resultType, resultText) {
+    try {
+      const resultsRef = ref(db, 'results');
+      await push(resultsRef, {
+        name: name,
+        type: resultType,
+        text: resultText,
+        timestamp: Date.now(),
+        date: new Date().toLocaleString('ru-RU')
+      });
+      return true;
+    } catch (e) {
+      console.error("Ошибка сохранения:", e);
+      return false;
+    }
+  };
+</script>
+
+<script>
+var map = L.map('map').setView([48.0, 40.5], 8);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+  attribution: '&copy; OpenStreetMap &copy; CARTO'
+}).addTo(map);
+L.marker([48.17, 40.80]).addTo(map).bindPopup('<b>Белая Калитва</b>').openPopup();
+L.marker([48.32, 40.26]).addTo(map).bindPopup('<b>Каменск-Шахтинский</b>');
+L.marker([47.42, 40.09]).addTo(map).bindPopup('<b>Новочеркасск</b>');
+L.marker([47.71, 40.21]).addTo(map).bindPopup('<b>Шахты</b>');
+L.marker([47.21, 38.93]).addTo(map).bindPopup('<b>Таганрог</b>');
+L.marker([49.63, 41.73]).addTo(map).bindPopup('<b>Вешенская</b>');
+L.marker([47.23, 39.72]).addTo(map).bindPopup('<b>Ростов-на-Дону</b>');
+
+function filterCards(category, city, event) {
+  if (event) {
+    const parent = event.target.parentElement;
+    parent.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    event.target.classList.add('active');
+  }
+  document.querySelectorAll('.card').forEach(card => {
+    const c = card.getAttribute('data-category');
+    const ct = card.getAttribute('data-city');
+    const catOk = (category === 'all' || c === category);
+    const cityOk = (city === 'all' || ct === city || ct === 'all');
+    card.style.display = (catOk && cityOk) ? 'flex' : 'none';
+  });
+}
+
+const questions = [
+  { q: "Что нравится делать в свободное время?", a: [
+    { t: "Разбирать технику", type: "tech" },
+    { t: "Общаться с людьми", type: "human" },
+    { t: "Рисовать", type: "art" },
+    { t: "Программировать", type: "it" } ]},
+  { q: "Какой предмет легче?", a: [
+    { t: "Физика, математика", type: "tech" },
+    { t: "История, литература", type: "human" },
+    { t: "ИЗО, музыка", type: "art" },
+    { t: "Информатика", type: "it" } ]},
+  { q: "Интересная работа?", a: [
+    { t: "Строить, управлять станками", type: "tech" },
+    { t: "Учить, лечить", type: "human" },
+    { t: "Дизайнер, фотограф", type: "art" },
+    { t: "Программист", type: "it" } ]},
+  { q: "Что важнее?", a: [
+    { t: "Стабильность", type: "tech" },
+    { t: "Польза для людей", type: "human" },
+    { t: "Творчество", type: "art" },
+    { t: "Удалёнка", type: "it" } ]},
+  { q: "Как решаешь задачи?", a: [
+    { t: "Практически", type: "tech" },
+    { t: "Обсуждаю", type: "human" },
+    { t: "Нестандартно", type: "art" },
+    { t: "Анализирую", type: "it" } ]},
+  { q: "Какой проект интереснее?", a: [
+    { t: "Робот", type: "tech" },
+    { t: "Опрос", type: "human" },
+    { t: "Плакат", type: "art" },
+    { t: "Сайт", type: "it" } ]},
+  { q: "Что привлекает в работе?", a: [
+    { t: "Инструменты", type: "tech" },
+    { t: "Люди", type: "human" },
+    { t: "Идеи", type: "art" },
+    { t: "Информация", type: "it" } ]},
+  { q: "Книга/фильм?", a: [
+    { t: "Про технику", type: "tech" },
+    { t: "Про людей", type: "human" },
+    { t: "Фэнтези, искусство", type: "art" },
+    { t: "Про технологии", type: "it" } ]},
+  { q: "Что легче?", a: [
+    { t: "Работа руками", type: "tech" },
+    { t: "Общение", type: "human" },
+    { t: "Воображение", type: "art" },
+    { t: "Логика", type: "it" } ]},
+  { q: "Где работать?", a: [
+    { t: "На заводе", type: "tech" },
+    { t: "В школе, больнице", type: "human" },
+    { t: "В студии", type: "art" },
+    { t: "В IT-компании", type: "it" } ]}
+];
+
+function renderQuiz() {
+  const form = document.getElementById('quiz-form');
+  form.innerHTML = '';
+  questions.forEach((q, i) => {
+    const div = document.createElement('div');
+    div.className = 'quiz-question';
+    div.innerHTML = `<p>${i + 1}. ${q.q}</p>`;
+    const opts = document.createElement('div');
+    opts.className = 'quiz-options';
+    q.a.forEach(ans => {
+      const label = document.createElement('label');
+      label.innerHTML = `<input type="radio" name="q${i}" value="${ans.type}"> ${ans.t}`;
+      opts.appendChild(label);
+    });
+    div.appendChild(opts);
+    form.appendChild(div);
+  });
+}
+
+async function calculateQuizResult() {
+  const name = document.getElementById('studentName').value.trim();
+  if (name.length < 2) {
+    alert('Пожалуйста, введи своё имя!');
+    document.getElementById('studentName').focus();
+    return;
+  }
+
+  const types = { tech: 0, human: 0, art: 0, it: 0 };
+  for (let i = 0; i < questions.length; i++) {
+    const radios = document.getElementsByName(`q${i}`);
+    let ok = false;
+    for (const r of radios) if (r.checked) { types[r.value]++; ok = true; break; }
+    if (!ok) { alert('Ответь на все вопросы!'); return; }
+  }
+
+  let maxType = 'tech', maxCount = -1;
+  for (const t in types) if (types[t] > maxCount) { maxCount = types[t]; maxType = t; }
+
+  const descriptions = {
+    tech: "Ты — человек-техника! Любишь механизмы и инструменты.",
+    human: "Ты — человек-человек! Умеешь общаться и помогать.",
+    art: "Ты — творческая личность! Развито воображение.",
+    it: "Ты — человек-знаковая система! Логика и технологии."
+  };
+  const recommendations = {
+    tech: "Рекомендуем: Сварщик, Электрик, Автомеханик.",
+    human: "Рекомендуем: Педагог, Медсестра, Соцработник.",
+    art: "Рекомендуем: Дизайнер, Парикмахер, Фотограф.",
+    it: "Рекомендуем: Программист, Сисадмин, Аналитик."
+  };
+
+  document.getElementById('resultName').textContent = name;
+  document.getElementById('result-text').textContent = descriptions[maxType];
+  document.getElementById('result-recommendation').textContent = recommendations[maxType];
+  document.getElementById('quiz-result').style.display = 'block';
+
+  const statusEl = document.getElementById('saveStatus');
+  statusEl.textContent = "Сохраняем результат...";
+  statusEl.style.color = "var(--muted)";
+
+  if (typeof window.saveResultToFirebase !== 'function') {
+    statusEl.textContent = "Firebase не загрузился. Откройте F12 → Console.";
+    statusEl.style.color = "var(--bad)";
+    return;
+  }
+
+  const success = await window.saveResultToFirebase(name, maxType, descriptions[maxType]);
+
+  if (success) {
+    statusEl.textContent = "Результат сохранён!";
+    statusEl.style.color = "var(--ok)";
+  } else {
+    statusEl.textContent = "Не удалось сохранить. Откройте F12 → Console.";
+    statusEl.style.color = "var(--bad)";
+  }
+
+  document.getElementById('quiz-result').scrollIntoView({ behavior: 'smooth' });
+}
+
+const emojiQuestions = [
+  { emoji: "👨‍🍳🍳🥘", answer: "Повар", options: ["Повар", "Врач", "Сварщик", "Учитель"] },
+  { emoji: "👨‍⚕️💉🏥", answer: "Врач", options: ["Врач", "Повар", "Дизайнер", "Электрик"] },
+  { emoji: "👨‍💻💻⌨️", answer: "Программист", options: ["Программист", "Сварщик", "Пекарь", "Водитель"] },
+  { emoji: "👷‍♂️🔨🏗️", answer: "Строитель", options: ["Строитель", "Повар", "Актёр", "Певец"] },
+  { emoji: "👩‍🏫📚✏️", answer: "Учитель", options: ["Учитель", "Программист", "Сварщик", "Фотограф"] },
+  { emoji: "👨‍🔧🔧🚗", answer: "Автомеханик", options: ["Автомеханик", "Парикмахер", "Врач", "Повар"] },
+  { emoji: "👩‍🎨🎨🖌️", answer: "Художник", options: ["Художник", "Инженер", "Медсестра", "Логист"] },
+  { emoji: "👮‍♂️🚔🚨", answer: "Полицейский", options: ["Полицейский", "Пекарь", "Программист", "Дизайнер"] },
+  { emoji: "✈️👨‍✈️🛫", answer: "Пилот", options: ["Пилот", "Сварщик", "Официант", "Юрист"] },
+  { emoji: "👩‍🔬🔬🧪", answer: "Химик", options: ["Химик", "Фотограф", "Сварщик", "Повар"] }
+];
+
+let currentGameIndex = 0, gameScore = 0, gameTotal = 0, answered = false;
+function shuffle(arr) { return arr.sort(() => Math.random() - 0.5); }
+
+function loadEmojiQuestion() {
+  if (currentGameIndex >= emojiQuestions.length) {
+    document.getElementById('emojiDisplay').textContent = "🎉";
+    document.getElementById('gameOptions').innerHTML = '';
+    document.getElementById('gameFeedback').textContent = `Игра окончена! Счёт: ${gameScore}/${gameTotal}`;
+    document.getElementById('nextBtn').style.display = 'none';
+    return;
+  }
+  answered = false;
+  const q = emojiQuestions[currentGameIndex];
+  document.getElementById('emojiDisplay').textContent = q.emoji;
+  document.getElementById('gameFeedback').textContent = '';
+  const optsDiv = document.getElementById('gameOptions');
+  optsDiv.innerHTML = '';
+  shuffle([...q.options]).forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'game-option';
+    btn.textContent = opt;
+    btn.onclick = () => checkEmojiAnswer(btn, opt, q.answer);
+    optsDiv.appendChild(btn);
+  });
+  document.getElementById('nextBtn').style.display = 'none';
+  document.getElementById('gameTotal').textContent = gameTotal;
+  document.getElementById('gameScore').textContent = gameScore;
+}
+
+function checkEmojiAnswer(btn, chosen, correct) {
+  if (answered) return;
+  answered = true;
+  gameTotal++;
+  document.getElementById('gameTotal').textContent = gameTotal;
+  if (chosen === correct) {
+    btn.classList.add('correct');
+    gameScore++;
+    document.getElementById('gameFeedback').textContent = "Правильно!";
+    document.getElementById('gameFeedback').style.color = "var(--ok)";
+  } else {
+    btn.classList.add('wrong');
+    document.querySelectorAll('.game-option').forEach(b => {
+      if (b.textContent === correct) b.classList.add('correct');
+    });
+    document.getElementById('gameFeedback').textContent = `Правильно: ${correct}`;
+    document.getElementById('gameFeedback').style.color = "var(--bad)";
+  }
+  document.getElementById('gameScore').textContent = gameScore;
+  document.getElementById('nextBtn').style.display = 'inline-block';
+}
+
+function nextEmojiQuestion() { currentGameIndex++; loadEmojiQuestion(); }
+
+renderQuiz();
+loadEmojiQuestion();
+</script>
+</body>
+</html>
