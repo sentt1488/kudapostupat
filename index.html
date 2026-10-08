@@ -14,29 +14,44 @@
 * { box-sizing: border-box; }
 body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; padding: 0;
   background: var(--bg); color: var(--text); line-height: 1.6; scroll-behavior: smooth; }
-header { text-align: center; padding: 60px 20px;
+header { text-align: center; padding: 50px 20px 30px;
   background: linear-gradient(135deg, #1a1a24 0%, #2a2a3a 100%);
   border-bottom: 2px solid var(--accent); }
-h1 { font-size: 2.3rem; margin: 0 0 10px; }
-.subtitle { color: var(--muted); font-size: 1.1rem; max-width: 800px; margin: 0 auto; }
+h1 { font-size: 2.2rem; margin: 0 0 10px; }
+.subtitle { color: var(--muted); font-size: 1rem; max-width: 700px; margin: 0 auto; }
 .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-#map { height: 400px; width: 100%; border-radius: 14px; margin: 40px 0; border: 1px solid #2a2a3a; z-index: 1; }
-.section-title { text-align: center; margin-top: 60px; color: var(--accent); font-size: 1.7rem; }
-.section-subtitle { text-align: center; color: var(--muted); margin-bottom: 30px; max-width: 700px; margin: 0 auto 30px; }
+#map { height: 450px; width: 100%; border-radius: 14px; margin: 40px 0 20px; border: 1px solid #2a2a3a; z-index: 1; }
+.section-title { text-align: center; margin-top: 50px; color: var(--accent); font-size: 1.6rem; }
+.section-subtitle { text-align: center; color: var(--muted); margin-bottom: 25px; max-width: 700px; margin-left: auto; margin-right: auto; font-size: 0.95rem; }
 .filters { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
 .filter-btn { background: var(--card); color: var(--text); border: 1px solid #2a2a3a;
   padding: 10px 20px; border-radius: 20px; cursor: pointer; transition: all 0.3s; font-size: 0.9rem; }
-.filter-btn:hover, .filter-btn.active { background: var(--accent); border-color: var(--accent); }
+.filter-btn:hover { border-color: var(--accent); }
+.filter-btn.active { background: var(--accent); border-color: var(--accent); }
 .cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
 .card { background: var(--card); border-radius: 14px; padding: 22px; border: 1px solid #2a2a3a;
-  transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s; display: flex; flex-direction: column; }
+  transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s; display: flex; flex-direction: column; cursor: pointer; }
 .card:hover { transform: translateY(-6px); box-shadow: 0 15px 30px rgba(123,97,255,0.15); border-color: var(--accent); }
 .card h3 { margin-top: 0; color: var(--accent); font-size: 1.1rem; }
 .card p { color: var(--muted); font-size: 0.92rem; margin: 5px 0; }
 .salary { color: var(--ok); font-weight: bold; font-size: 0.92rem; margin: 10px 0 5px; }
 .card .tag { display: inline-block; background: rgba(123,97,255,0.15); color: var(--accent);
   padding: 4px 10px; border-radius: 6px; font-size: 0.78rem; margin-top: 8px; margin-right: 5px; align-self: flex-start; }
-.quiz-container, .game-container { background: var(--card); border-radius: 14px;
+.card a.site-btn {
+  display: block; text-align: center; margin-top: 15px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: #fff; padding: 11px 18px; border-radius: 10px;
+  text-decoration: none; font-size: 0.92rem; font-weight: bold;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.card a.site-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(123,97,255,0.3); }
+#cardsArea { display: none; }
+.placeholder-msg {
+  text-align: center; padding: 40px 20px; color: var(--muted);
+  background: var(--card); border-radius: 14px; border: 1px dashed #2a2a3a;
+  margin-bottom: 30px;
+}
+.quiz-container { background: var(--card); border-radius: 14px;
   padding: 30px; border: 1px solid #2a2a3a; margin-top: 30px; }
 .quiz-question { margin-bottom: 22px; padding-bottom: 12px; border-bottom: 1px solid #2a2a3a; }
 .quiz-question p { font-weight: bold; margin-bottom: 10px; }
@@ -56,19 +71,7 @@ h1 { font-size: 2.3rem; margin: 0 0 10px; }
   color: white; border: none; padding: 14px 34px; border-radius: 25px;
   cursor: pointer; font-size: 1rem; font-weight: bold; transition: transform 0.3s, box-shadow 0.3s; }
 .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(123,97,255,0.3); }
-.submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .save-status { margin-top: 15px; font-size: 0.95rem; }
-.emoji-game { text-align: center; }
-.emoji-display { font-size: 4rem; margin: 20px 0; letter-spacing: 10px; animation: bounce 1s infinite alternate; }
-@keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-8px); } }
-.game-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-top: 20px; }
-.game-option { background: #22222e; border: 1px solid #2a2a3a; padding: 14px;
-  border-radius: 10px; cursor: pointer; transition: all 0.2s; color: var(--text); font-size: 0.95rem; }
-.game-option:hover { background: #2a2a3a; border-color: var(--accent); }
-.game-option.correct { background: var(--ok) !important; border-color: var(--ok) !important; }
-.game-option.wrong { background: var(--bad) !important; border-color: var(--bad) !important; }
-.game-score { font-size: 1.1rem; color: var(--accent); font-weight: bold; margin-top: 15px; }
-.game-feedback { margin-top: 15px; font-size: 1.1rem; font-weight: bold; min-height: 30px; }
 footer { text-align: center; padding: 40px 20px; margin-top: 80px;
   border-top: 1px solid #2a2a3a; color: var(--muted); font-size: 0.9rem; }
 </style>
@@ -77,272 +80,10 @@ footer { text-align: center; padding: 40px 20px; margin-top: 80px;
 
 <header>
   <h1>Куда пойти после 9 и 11 класса?</h1>
-  <p class="subtitle">Полный каталог колледжей и вузов Ростовской области с указанием общежитий и зарплат по региону на 2026 год.</p>
+  <p class="subtitle">Полный каталог колледжей и вузов Ростовской области.</p>
 </header>
 
 <div class="container">
-  <h2 class="section-title">🗺️ Карта учебных заведений</h2>
-  <div id="map"></div>
-
-  <h2 class="section-title">🎓 Каталог возможностей</h2>
-  <div class="filters">
-    <button class="filter-btn active" onclick="filterCards('all','all',event)">Все</button>
-    <button class="filter-btn" onclick="filterCards('college','all',event)">Колледжи</button>
-    <button class="filter-btn" onclick="filterCards('university','all',event)">Вузы</button>
-  </div>
-  <div class="filters">
-    <button class="filter-btn city-btn active" onclick="filterCards('all','all',event)">Все города</button>
-    <button class="filter-btn city-btn" onclick="filterCards('all','Белая Калитва',event)">Белая Калитва</button>
-    <button class="filter-btn city-btn" onclick="filterCards('all','Новочеркасск',event)">Новочеркасск</button>
-    <button class="filter-btn city-btn" onclick="filterCards('all','Шахты',event)">Шахты</button>
-    <button class="filter-btn city-btn" onclick="filterCards('all','Каменск-Шахтинский',event)">Каменск</button>
-    <button class="filter-btn city-btn" onclick="filterCards('all','Таганрог',event)">Таганрог</button>
-    <button class="filter-btn city-btn" onclick="filterCards('all','Шолоховский район',event)">Шолоховский</button>
-    <button class="filter-btn city-btn" onclick="filterCards('all','Ростов-на-Дону',event)">Ростов</button>
-  </div>
-
-  <div class="cards-grid" id="cardsGrid">
-
-    <div class="card" data-category="college" data-city="Белая Калитва">
-      <h3>Белокалитвинский гуманитарно-индустриальный техникум (БГИТ)</h3>
-      <p><strong>Город:</strong> Белая Калитва</p>
-      <p><strong>Специальности:</strong> Экономика, Соцработа, Электрооборудование, Автосервис.</p>
-      <p class="salary"><strong>Средняя зарплата:</strong> 35 000 – 60 000 ₽</p>
-      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
-    </div>
-    <div class="card" data-category="college" data-city="Белая Калитва">
-      <h3>Белокалитвинский технологический техникум (БТТ)</h3>
-      <p><strong>Город:</strong> Белая Калитва</p>
-      <p><strong>Специальности:</strong> Сварщик, Повар-кондитер, Дошкольное образование.</p>
-      <p class="salary"><strong>Средняя зарплата:</strong> 40 000 – 70 000 ₽</p>
-      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
-    </div>
-    <div class="card" data-category="college" data-city="Белая Калитва">
-      <h3>Белокалитвинский казачий кадетский техникум</h3>
-      <p><strong>Город:</strong> Белая Калитва</p>
-      <p><strong>Специальности:</strong> Повар-кондитер, Сельхозпроизводство.</p>
-      <p class="salary"><strong>Средняя зарплата:</strong> 30 000 – 50 000 ₽</p>
-      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
-    </div>
-
-    <div class="card" data-category="college" data-city="Новочеркасск">
-      <h3>Новочеркасский промышленно-гуманитарный колледж (НПГК)</h3>
-      <p><strong>Город:</strong> Новочеркасск</p>
-      <p><strong>Специальности:</strong> Дизайн, Педагогика, Машиностроение, Экономика.</p>
-      <p class="salary"><strong>Средняя зарплата:</strong> 35 000 – 55 000 ₽</p>
-      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
-    </div>
-    <div class="card" data-category="college" data-city="Новочеркасск">
-      <h3>Донской строительный колледж (ДСК)</h3>
-      <p><strong>Город:</strong> Новочеркасск</p>
-      <p><strong>Специальности:</strong> Архитектура, Строительство, Экономика.</p>
-      <p class="salary"><strong>Средняя зарплата:</strong> 40 000 – 65 000 ₽</p>
-      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
-    </div>
-    <div class="card" data-category="college" data-city="Новочеркасск">
-      <h3>Новочеркасский машиностроительный колледж (НМК)</h3>
-      <p><strong>Город:</strong> Новочеркасск</p>
-      <p><strong>Специальности:</strong> Аддитивные технологии, Сисадмин, Электроснабжение.</p>
-      <p class="salary"><strong>Средняя зарплата:</strong> 40 000 – 70 000 ₽</p>
-      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
-    </div>
-    <div class="card" data-category="university" data-city="Новочеркасск">
-      <h3>Новочеркасский политехнический колледж ЮРГПУ (НПИ)</h3>
-      <p><strong>Город:</strong> Новочеркасск</p>
-      <p><strong>Специальности:</strong> Дизайн, Экономика, Программирование.</p>
-      <p class="salary"><strong>Средняя зарплата:</strong> 45 000 – 80 000 ₽</p>
-      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
-    </div>
-
-    <div class="card" data-category="college" data-city="Шахты">
-      <h3>Шахтинский политехнический колледж (ШПК)</h3>
-      <p><strong>Город:</strong> Шахты</p>
-      <p><strong>Специальности:</strong> Машиностроение, ЧПУ, Повар-кондитер.</p>
-      <p class="salary"><strong>Средняя зарплата:</strong> 35 000 – 60 000 ₽</p>
-      <span class="tag">Бюджет</span>
-    </div>
-    <div class="card" data-category="college" data-city="Шахты">
-      <h3>Шахтинский колледж топлива и энергетики (ШРКТЭ)</h3>
-      <p><strong>Город:</strong> Шахты</p>
-      <p><strong>Специальности:</strong> Электрооборудование, Автоматизация.</p>
-      <p class="salary"><strong>Средняя зарплата:</strong> 40 000 – 75 000 ₽</p>
-      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
-    </div>
-    <div class="card" data-category="college" data-city="Шахты">
-      <h3>Шахтинский техникум дизайна и сервиса «Дон-Текс»</h3>
-      <p><strong>Город:</strong> Шахты</p>
-      <p><strong>Специальности:</strong> Почта, Сварщик, Парикмахер, Портной.</p>
-      <p class="salary"><strong>Средняя зарплата:</strong> 25 000 – 45 000 ₽</p>
-      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
-    </div>
-    <div class="card" data-category="college" data-city="Шахты">
-      <h3>Шахтинский медицинский колледж</h3>
-      <p><strong>Город:</strong> Шахты</p>
-      <p><strong>Специальности:</strong> Сестринское дело, Лечебное дело, Акушерство.</p>
-      <p class="salary"><strong>Средняя зарплата:</strong> 35 000 – 60 000 ₽</p>
-      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
-    </div>
-    <div class="card" data-category="university" data-city="Шахты">
-      <h3>Институт сферы обслуживания (филиал ДГТУ)</h3>
-      <p><strong>Город:</strong> Шахты</p>
-      <p><strong>Специальности:</strong> Экономика, Страховое дело, Гостиничный сервис.</p>
-      <p class="salary"><strong>Средняя зарплата:</strong> 35 000 – 65 000 ₽</p>
-      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
-    </div>
-
-    <div class="card" data-category="college" data-city="Каменск-Шахтинский">
-      <h3>Каменск-Шахтинский медицинский колледж</h3>
-      <p><strong>Город:</strong> Каменск-Шахтинский</p>
-      <p><strong>Специальности:</strong> Лечебное дело, Сестринское дело, Фармация.</p>
-      <p class="salary"><strong>Средняя зарплата:</strong> 35 000 – 55 000 ₽</p>
-      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
-    </div>
-    <div class="card" data-category="college" data-city="Каменск-Шахтинский">
-      <h3>Каменский педагогический колледж (КамПК)</h3>
-      <p><strong>Город:</strong> Каменск-Шахтинский</p>
-      <p><strong>Специальности:</strong> Начальные классы, Дошкольное, Физкультура.</p>
-      <p class="salary"><strong>Средняя зарплата:</strong> 30 000 – 50 000 ₽</p>
-      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
-    </div>
-    <div class="card" data-category="college" data-city="Каменск-Шахтинский">
-      <h3>Каменский техникум строительства и автосервиса (КТСиА)</h3>
-      <p><strong>Город:</strong> Каменск-Шахтинский</p>
-      <p><strong>Специальности:</strong> Строительство, Автосервис.</p>
-      <p class="salary"><strong>Средняя зарплата:</strong> 40 000 – 65 000 ₽</p>
-      <span class="tag">Бюджет</span>
-    </div>
-    <div class="card" data-category="college" data-city="Каменск-Шахтинский">
-      <h3>Каменский химико-механический техникум (КХМТ)</h3>
-      <p><strong>Город:</strong> Каменск-Шахтинский</p>
-      <p><strong>Специальности:</strong> Машиностроение, Химтехнология, Электроснабжение.</p>
-      <p class="salary"><strong>Средняя зарплата:</strong> 40 000 – 70 000 ₽</p>
-      <span class="tag">Бюджет</span>
-    </div>
-    <div class="card" data-category="university" data-city="Каменск-Шахтинский">
-      <h3>Лиховской техникум железнодорожного транспорта</h3>
-      <p><strong>Город:</strong> Каменск-Шахтинский</p>
-      <p><strong>Специальности:</strong> Подвижной состав, Организация перевозок.</p>
-      <p class="salary"><strong>Средняя зарплата:</strong> 40 000 – 70 000 ₽</p>
-      <span class="tag">Бюджет</span>
-    </div>
-
-    <div class="card" data-category="college" data-city="Таганрог">
-      <h3>Таганрогский техникум «Тагмет»</h3>
-      <p><strong>Город:</strong> Таганрог</p>
-      <p><strong>Специальности:</strong> Машиностроение, Сварка, Металлургия.</p>
-      <p class="salary"><strong>Средняя зарплата:</strong> 45 000 – 80 000 ₽</p>
-      <span class="tag">Бюджет</span>
-    </div>
-    <div class="card" data-category="college" data-city="Таганрог">
-      <h3>Таганрогский авиационный колледж им. Петлякова</h3>
-      <p><strong>Город:</strong> Таганрог</p>
-      <p><strong>Специальности:</strong> Авиация, Машиностроение, Аддитивные технологии.</p>
-      <p class="salary"><strong>Средняя зарплата:</strong> 50 000 – 90 000 ₽</p>
-      <span class="tag">Бюджет</span>
-    </div>
-    <div class="card" data-category="college" data-city="Таганрог">
-      <h3>Таганрогский колледж морского приборостроения (ТКМП)</h3>
-      <p><strong>Город:</strong> Таганрог</p>
-      <p><strong>Специальности:</strong> Компьютерные системы, Радиоаппаратостроение.</p>
-      <p class="salary"><strong>Средняя зарплата:</strong> 45 000 – 80 000 ₽</p>
-      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
-    </div>
-    <div class="card" data-category="college" data-city="Таганрог">
-      <h3>Таганрогский механический колледж (ТМехК)</h3>
-      <p><strong>Город:</strong> Таганрог</p>
-      <p><strong>Специальности:</strong> Автомобилестроение, Торговое дело.</p>
-      <p class="salary"><strong>Средняя зарплата:</strong> 40 000 – 70 000 ₽</p>
-      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
-    </div>
-    <div class="card" data-category="university" data-city="Таганрог">
-      <h3>Политехнический колледж ДГТУ (Таганрог)</h3>
-      <p><strong>Город:</strong> Таганрог</p>
-      <p><strong>Специальности:</strong> Информационные системы, Физкультура, Экономика.</p>
-      <p class="salary"><strong>Средняя зарплата:</strong> 45 000 – 85 000 ₽</p>
-      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
-    </div>
-
-    <div class="card" data-category="college" data-city="Шолоховский район">
-      <h3>Вешенский педагогический колледж им. Шолохова</h3>
-      <p><strong>Город:</strong> ст. Вешенская</p>
-      <p><strong>Специальности:</strong> Начальные классы, Дошкольное, Физкультура.</p>
-      <p class="salary"><strong>Средняя зарплата:</strong> 30 000 – 50 000 ₽</p>
-      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
-    </div>
-    <div class="card" data-category="college" data-city="Шолоховский район">
-      <h3>БТТ (р.п. Шолоховский)</h3>
-      <p><strong>Город:</strong> р.п. Шолоховский</p>
-      <p><strong>Специальности:</strong> Сварщик, Повар-кондитер, Строитель.</p>
-      <p class="salary"><strong>Средняя зарплата:</strong> 35 000 – 55 000 ₽</p>
-      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
-    </div>
-
-    <div class="card" data-category="university" data-city="Ростов-на-Дону">
-      <h3>Южный федеральный университет (ЮФУ)</h3>
-      <p><strong>Город:</strong> Ростов-на-Дону</p>
-      <p><strong>Направления:</strong> IT, Инженерия, Педагогика, Экономика.</p>
-      <p class="salary"><strong>Средняя зарплата:</strong> 60 000 – 150 000 ₽</p>
-      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
-    </div>
-    <div class="card" data-category="university" data-city="Ростов-на-Дону">
-      <h3>Донской государственный технический университет (ДГТУ)</h3>
-      <p><strong>Город:</strong> Ростов-на-Дону</p>
-      <p><strong>Направления:</strong> Машиностроение, Строительство, IT, Дизайн.</p>
-      <p class="salary"><strong>Средняя зарплата:</strong> 55 000 – 140 000 ₽</p>
-      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
-    </div>
-    <div class="card" data-category="university" data-city="Ростов-на-Дону">
-      <h3>Ростовский государственный медицинский университет (РостГМУ)</h3>
-      <p><strong>Город:</strong> Ростов-на-Дону</p>
-      <p><strong>Направления:</strong> Лечебное дело, Педиатрия, Стоматология.</p>
-      <p class="salary"><strong>Средняя зарплата:</strong> 90 000 – 110 000 ₽</p>
-      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
-    </div>
-    <div class="card" data-category="university" data-city="Ростов-на-Дону">
-      <h3>Ростовский государственный экономический университет (РИНХ)</h3>
-      <p><strong>Город:</strong> Ростов-на-Дону</p>
-      <p><strong>Направления:</strong> Экономика, Финансы, Менеджмент, IT.</p>
-      <p class="salary"><strong>Средняя зарплата:</strong> 50 000 – 120 000 ₽</p>
-      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
-    </div>
-    <div class="card" data-category="university" data-city="Ростов-на-Дону">
-      <h3>Ростовский государственный университет путей сообщения (РГУПС)</h3>
-      <p><strong>Город:</strong> Ростов-на-Дону</p>
-      <p><strong>Направления:</strong> Железнодорожные, Логистика, IT.</p>
-      <p class="salary"><strong>Средняя зарплата:</strong> 50 000 – 110 000 ₽</p>
-      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
-    </div>
-
-    <div class="card" data-category="college" data-city="Ростов-на-Дону">
-      <h3>Ростовский-на-Дону колледж связи и информатики (РКСИ)</h3>
-      <p><strong>Город:</strong> Ростов-на-Дону</p>
-      <p><strong>Специальности:</strong> Программирование, Сети связи.</p>
-      <p class="salary"><strong>Средняя зарплата:</strong> 45 000 – 90 000 ₽</p>
-      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
-    </div>
-    <div class="card" data-category="college" data-city="Ростов-на-Дону">
-      <h3>Донской педагогический колледж (ДПК)</h3>
-      <p><strong>Город:</strong> Ростов-на-Дону</p>
-      <p><strong>Специальности:</strong> Начальные классы, Дошкольное.</p>
-      <p class="salary"><strong>Средняя зарплата:</strong> 30 000 – 55 000 ₽</p>
-      <span class="tag">Бюджет</span>
-    </div>
-    <div class="card" data-category="college" data-city="Ростов-на-Дону">
-      <h3>Ростовский колледж технологий машиностроения (РКТМ)</h3>
-      <p><strong>Город:</strong> Ростов-на-Дону</p>
-      <p><strong>Специальности:</strong> Машиностроение, Сварка, ЧПУ.</p>
-      <p class="salary"><strong>Средняя зарплата:</strong> 40 000 – 75 000 ₽</p>
-      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
-    </div>
-    <div class="card" data-category="college" data-city="Ростов-на-Дону">
-      <h3>Ростовский строительный колледж (РСК)</h3>
-      <p><strong>Город:</strong> Ростов-на-Дону</p>
-      <p><strong>Специальности:</strong> Строительство, Архитектура.</p>
-      <p class="salary"><strong>Средняя зарплата:</strong> 40 000 – 70 000 ₽</p>
-      <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
-    </div>
-
-  </div>
 
   <h2 class="section-title">🧭 Профориентационный тест</h2>
   <p class="section-subtitle">Введи имя, ответь на 10 вопросов — результат сохранится автоматически.</p>
@@ -358,13 +99,369 @@ footer { text-align: center; padding: 40px 20px; margin-top: 80px;
     </div>
   </div>
 
-  <h2 class="section-title">🎯 Угадай профессию по эмодзи</h2>
-  <div class="game-container emoji-game">
-    <div class="emoji-display" id="emojiDisplay">👨‍🍳🍳</div>
-    <div class="game-options" id="gameOptions"></div>
-    <div class="game-feedback" id="gameFeedback"></div>
-    <div class="game-score">Счёт: <span id="gameScore">0</span> / <span id="gameTotal">0</span></div>
-    <button class="submit-btn" id="nextBtn" onclick="nextEmojiQuestion()" style="display:none; margin-top:20px;">Следующий →</button>
+  <h2 class="section-title">🗺️ Карта учебных заведений</h2>
+  <p class="section-subtitle">Нажмите на метку города или выберите город кнопкой ниже.</p>
+  <div id="map"></div>
+
+  <h2 class="section-title">🎓 Каталог возможностей</h2>
+  <p class="section-subtitle">Выберите город — и увидите колледжи и вузы.</p>
+
+  <div class="filters" id="cityFilters">
+    <button class="filter-btn city-btn" onclick="selectCity('Белая Калитва', event)">Белая Калитва</button>
+    <button class="filter-btn city-btn" onclick="selectCity('Новочеркасск', event)">Новочеркасск</button>
+    <button class="filter-btn city-btn" onclick="selectCity('Шахты', event)">Шахты</button>
+    <button class="filter-btn city-btn" onclick="selectCity('Каменск-Шахтинский', event)">Каменск</button>
+    <button class="filter-btn city-btn" onclick="selectCity('Таганрог', event)">Таганрог</button>
+    <button class="filter-btn city-btn" onclick="selectCity('Шолоховский район', event)">Шолоховский</button>
+    <button class="filter-btn city-btn" onclick="selectCity('Ростов-на-Дону', event)">Ростов</button>
+  </div>
+
+  <div class="placeholder-msg" id="placeholder">👆 Выберите город, чтобы увидеть учебные заведения</div>
+
+  <div id="cardsArea">
+    <div class="filters">
+      <button class="filter-btn active" onclick="selectType('all', event)">Все</button>
+      <button class="filter-btn" onclick="selectType('college', event)">Колледжи</button>
+      <button class="filter-btn" onclick="selectType('university', event)">Вузы</button>
+    </div>
+
+    <div class="cards-grid" id="cardsGrid">
+
+      <!-- ================= БЕЛАЯ КАЛИТВА ================= -->
+      <div class="card" data-category="college" data-city="Белая Калитва" data-url="https://bgitbk.ru/">
+        <h3>Белокалитвинский гуманитарно-индустриальный техникум (БГИТ)</h3>
+        <p><strong>Город:</strong> Белая Калитва</p>
+        <p><strong>Специальности:</strong> Экономика, Соцработа, Электрооборудование, Автосервис.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 35 000 – 60 000 ₽</p>
+        <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+        <a class="site-btn" href="https://bgitbk.ru/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+      <div class="card" data-category="college" data-city="Белая Калитва" data-url="https://bktt.ru/">
+        <h3>Белокалитвинский технологический техникум (БТТ)</h3>
+        <p><strong>Город:</strong> Белая Калитва</p>
+        <p><strong>Специальности:</strong> Сварщик, Повар-кондитер, Дошкольное образование.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 40 000 – 70 000 ₽</p>
+        <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+        <a class="site-btn" href="https://bktt.ru/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+      <div class="card" data-category="college" data-city="Белая Калитва" data-url="http://bkmteh.ru/">
+        <h3>Белокалитвинский многопрофильный техникум</h3>
+        <p><strong>Город:</strong> Белая Калитва</p>
+        <p><strong>Специальности:</strong> Технические и рабочие специальности.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 30 000 – 55 000 ₽</p>
+        <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+        <a class="site-btn" href="http://bkmteh.ru/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+
+      <!-- ================= НОВОЧЕРКАССК ================= -->
+      <div class="card" data-category="college" data-city="Новочеркасск" data-url="https://novoch-pgk.ru/">
+        <h3>Новочеркасский промышленно-гуманитарный колледж (НПГК)</h3>
+        <p><strong>Город:</strong> Новочеркасск</p>
+        <p><strong>Специальности:</strong> Дизайн, Педагогика, Машиностроение, Экономика.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 35 000 – 55 000 ₽</p>
+        <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+        <a class="site-btn" href="https://novoch-pgk.ru/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+      <div class="card" data-category="college" data-city="Новочеркасск" data-url="https://дск.сайт/">
+        <h3>Донской строительный колледж (ДСК)</h3>
+        <p><strong>Город:</strong> Новочеркасск</p>
+        <p><strong>Специальности:</strong> Архитектура, Строительство, Экономика.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 40 000 – 65 000 ₽</p>
+        <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+        <a class="site-btn" href="https://дск.сайт/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+      <div class="card" data-category="college" data-city="Новочеркасск" data-url="https://nmk35.ru/">
+        <h3>Новочеркасский машиностроительный колледж (НМК)</h3>
+        <p><strong>Город:</strong> Новочеркасск</p>
+        <p><strong>Специальности:</strong> Аддитивные технологии, Сисадмин, Электроснабжение.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 40 000 – 70 000 ₽</p>
+        <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+        <a class="site-btn" href="https://nmk35.ru/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+      <div class="card" data-category="university" data-city="Новочеркасск" data-url="https://www.npi-tu.ru/">
+        <h3>Новочеркасский политехнический колледж ЮРГПУ (НПИ)</h3>
+        <p><strong>Город:</strong> Новочеркасск</p>
+        <p><strong>Специальности:</strong> Дизайн, Экономика, Программирование.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 45 000 – 80 000 ₽</p>
+        <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+        <a class="site-btn" href="https://www.npi-tu.ru/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+      <div class="card" data-category="college" data-city="Новочеркасск" data-url="https://nkgk.ru/">
+        <h3>Новочеркасский колледж промышленных технологий и управления</h3>
+        <p><strong>Город:</strong> Новочеркасск</p>
+        <p><strong>Специальности:</strong> Технологии, Управление, Экономика.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 35 000 – 60 000 ₽</p>
+        <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+        <a class="site-btn" href="https://nkgk.ru/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+
+      <!-- ================= ШАХТЫ ================= -->
+      <div class="card" data-category="college" data-city="Шахты" data-url="https://shptk.ru/">
+        <h3>Шахтинский политехнический колледж (ШПК)</h3>
+        <p><strong>Город:</strong> Шахты</p>
+        <p><strong>Специальности:</strong> Машиностроение, ЧПУ, Повар-кондитер.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 35 000 – 60 000 ₽</p>
+        <span class="tag">Бюджет</span>
+        <a class="site-btn" href="https://shptk.ru/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+      <div class="card" data-category="college" data-city="Шахты" data-url="https://topcollege.ru/">
+        <h3>Шахтинский региональный колледж топлива и энергетики (ШРКТЭ)</h3>
+        <p><strong>Город:</strong> Шахты</p>
+        <p><strong>Специальности:</strong> Электрооборудование, Автоматизация.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 40 000 – 75 000 ₽</p>
+        <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+        <a class="site-btn" href="https://topcollege.ru/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+      <div class="card" data-category="college" data-city="Шахты" data-url="https://don-teks.ru/">
+        <h3>Шахтинский техникум дизайна и сервиса «Дон-Текс»</h3>
+        <p><strong>Город:</strong> Шахты</p>
+        <p><strong>Специальности:</strong> Почта, Сварщик, Парикмахер, Портной.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 25 000 – 45 000 ₽</p>
+        <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+        <a class="site-btn" href="https://don-teks.ru/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+      <div class="card" data-category="college" data-city="Шахты" data-url="https://shmk-shakhty.ru/">
+        <h3>Шахтинский медицинский колледж им. Г.В. Кузнецовой</h3>
+        <p><strong>Город:</strong> Шахты</p>
+        <p><strong>Специальности:</strong> Сестринское дело, Лечебное дело, Акушерство.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 35 000 – 60 000 ₽</p>
+        <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+        <a class="site-btn" href="https://shmk-shakhty.ru/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+      <div class="card" data-category="university" data-city="Шахты" data-url="https://sssu.ru/">
+        <h3>Институт сферы обслуживания (филиал ДГТУ)</h3>
+        <p><strong>Город:</strong> Шахты</p>
+        <p><strong>Специальности:</strong> Экономика, Страховое дело, Гостиничный сервис.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 35 000 – 65 000 ₽</p>
+        <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+        <a class="site-btn" href="https://sssu.ru/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+      <div class="card" data-category="university" data-city="Шахты" data-url="https://sadi.ru/">
+        <h3>Шахтинский автодорожный институт (филиал) ЮРГПУ (НПИ)</h3>
+        <p><strong>Город:</strong> Шахты</p>
+        <p><strong>Специальности:</strong> Транспорт, Строительство, Экономика.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 40 000 – 70 000 ₽</p>
+        <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+        <a class="site-btn" href="https://sadi.ru/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+      <div class="card" data-category="college" data-city="Шахты" data-url="https://cooptehnikym.ru/">
+        <h3>Шахтинский кооперативный техникум бизнеса, коммерции, экономики и права</h3>
+        <p><strong>Город:</strong> Шахты</p>
+        <p><strong>Специальности:</strong> Экономика, Право, Коммерция.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 30 000 – 50 000 ₽</p>
+        <span class="tag">Платное</span><span class="tag">Общежитие</span>
+        <a class="site-btn" href="https://cooptehnikym.ru/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+
+      <!-- ================= КАМЕНСК-ШАХТИНСКИЙ ================= -->
+      <div class="card" data-category="college" data-city="Каменск-Шахтинский" data-url="https://kam-ped.ru/">
+        <h3>Каменский педагогический колледж (КамПК)</h3>
+        <p><strong>Город:</strong> Каменск-Шахтинский</p>
+        <p><strong>Специальности:</strong> Начальные классы, Дошкольное, Физкультура.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 30 000 – 50 000 ₽</p>
+        <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+        <a class="site-btn" href="https://kam-ped.ru/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+      <div class="card" data-category="college" data-city="Каменск-Шахтинский" data-url="https://ktsia.ru/">
+        <h3>Каменский техникум строительства и автосервиса (КТСиА)</h3>
+        <p><strong>Город:</strong> Каменск-Шахтинский</p>
+        <p><strong>Специальности:</strong> Строительство, Автосервис.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 40 000 – 65 000 ₽</p>
+        <span class="tag">Бюджет</span>
+        <a class="site-btn" href="https://ktsia.ru/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+      <div class="card" data-category="college" data-city="Каменск-Шахтинский" data-url="https://kxmt-kamensk.ru/">
+        <h3>Каменский химико-механический техникум (КХМТ)</h3>
+        <p><strong>Город:</strong> Каменск-Шахтинский</p>
+        <p><strong>Специальности:</strong> Машиностроение, Химтехнология, Электроснабжение.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 40 000 – 70 000 ₽</p>
+        <span class="tag">Бюджет</span>
+        <a class="site-btn" href="https://kxmt-kamensk.ru/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+      <div class="card" data-category="college" data-city="Каменск-Шахтинский" data-url="https://kshmk.ru/">
+        <h3>Каменск-Шахтинский медицинский колледж</h3>
+        <p><strong>Город:</strong> Каменск-Шахтинский</p>
+        <p><strong>Специальности:</strong> Лечебное дело, Сестринское дело, Фармация.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 35 000 – 55 000 ₽</p>
+        <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+        <a class="site-btn" href="https://kshmk.ru/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+      <div class="card" data-category="university" data-city="Каменск-Шахтинский" data-url="https://ltgt.ru/">
+        <h3>Лиховской техникум железнодорожного транспорта (филиал РГУПС)</h3>
+        <p><strong>Город:</strong> Каменск-Шахтинский</p>
+        <p><strong>Специальности:</strong> Подвижной состав, Организация перевозок.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 40 000 – 70 000 ₽</p>
+        <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+        <a class="site-btn" href="https://ltgt.ru/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+      <div class="card" data-category="university" data-city="Каменск-Шахтинский" data-url="https://www.npi-tu.ru/">
+        <h3>Каменский институт (филиал) ЮРГПУ (НПИ)</h3>
+        <p><strong>Город:</strong> Каменск-Шахтинский</p>
+        <p><strong>Специальности:</strong> Технические направления.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 40 000 – 65 000 ₽</p>
+        <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+        <a class="site-btn" href="https://www.npi-tu.ru/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+
+      <!-- ================= ТАГАНРОГ ================= -->
+      <div class="card" data-category="college" data-city="Таганрог" data-url="https://tagmet-college.ru/">
+        <h3>Таганрогский техникум машиностроения и металлургии «Тагмет»</h3>
+        <p><strong>Город:</strong> Таганрог</p>
+        <p><strong>Специальности:</strong> Машиностроение, Сварка, Металлургия.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 45 000 – 80 000 ₽</p>
+        <span class="tag">Бюджет</span>
+        <a class="site-btn" href="https://tagmet-college.ru/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+      <div class="card" data-category="college" data-city="Таганрог" data-url="https://aviakolledzh.ru/">
+        <h3>Таганрогский авиационный колледж им. В.М. Петлякова</h3>
+        <p><strong>Город:</strong> Таганрог</p>
+        <p><strong>Специальности:</strong> Авиация, Машиностроение, Аддитивные технологии.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 50 000 – 90 000 ₽</p>
+        <span class="tag">Бюджет</span>
+        <a class="site-btn" href="https://aviakolledzh.ru/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+      <div class="card" data-category="college" data-city="Таганрог" data-url="https://tkmptag.ru/">
+        <h3>Таганрогский колледж морского приборостроения (ТКМП)</h3>
+        <p><strong>Город:</strong> Таганрог</p>
+        <p><strong>Специальности:</strong> Компьютерные системы, Радиоаппаратостроение.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 45 000 – 80 000 ₽</p>
+        <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+        <a class="site-btn" href="https://tkmptag.ru/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+      <div class="card" data-category="college" data-city="Таганрог" data-url="https://tmehk.ru/">
+        <h3>Таганрогский механический колледж (ТМехК)</h3>
+        <p><strong>Город:</strong> Таганрог</p>
+        <p><strong>Специальности:</strong> Автомобилестроение, Торговое дело.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 40 000 – 70 000 ₽</p>
+        <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+        <a class="site-btn" href="https://tmehk.ru/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+      <div class="card" data-category="college" data-city="Таганрог" data-url="https://tagankin.ru/">
+        <h3>Таганрогский технологический техникум питания и торговли</h3>
+        <p><strong>Город:</strong> Таганрог</p>
+        <p><strong>Специальности:</strong> Повар, Продавец.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 30 000 – 50 000 ₽</p>
+        <span class="tag">Бюджет</span>
+        <a class="site-btn" href="https://tagankin.ru/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+      <div class="card" data-category="college" data-city="Таганрог" data-url="https://tksiit.ru/">
+        <h3>Таганрогский техникум строительной индустрии и технологий</h3>
+        <p><strong>Город:</strong> Таганрог</p>
+        <p><strong>Специальности:</strong> Строительство.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 40 000 – 65 000 ₽</p>
+        <span class="tag">Бюджет</span>
+        <a class="site-btn" href="https://tksiit.ru/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+      <div class="card" data-category="university" data-city="Таганрог" data-url="https://tpk-donstu.ru/">
+        <h3>Политехнический колледж ДГТУ (Таганрог)</h3>
+        <p><strong>Город:</strong> Таганрог</p>
+        <p><strong>Специальности:</strong> Информационные системы, Физкультура, Экономика.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 45 000 – 85 000 ₽</p>
+        <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+        <a class="site-btn" href="https://tpk-donstu.ru/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+      <div class="card" data-category="university" data-city="Таганрог" data-url="https://itm.donstu.ru/">
+        <h3>Институт управления в экономических, экологических и социальных системах ЮФУ (Таганрог)</h3>
+        <p><strong>Город:</strong> Таганрог</p>
+        <p><strong>Направления:</strong> Управление, Экономика, IT.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 50 000 – 110 000 ₽</p>
+        <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+        <a class="site-btn" href="https://itm.donstu.ru/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+
+      <!-- ================= ШОЛОХОВСКИЙ РАЙОН ================= -->
+      <div class="card" data-category="college" data-city="Шолоховский район" data-url="https://veshensky-college.ru/">
+        <h3>Вешенский педагогический колледж им. М.А. Шолохова</h3>
+        <p><strong>Город:</strong> ст. Вешенская</p>
+        <p><strong>Специальности:</strong> Начальные классы, Дошкольное, Физкультура.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 30 000 – 50 000 ₽</p>
+        <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+        <a class="site-btn" href="https://veshensky-college.ru/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+      <div class="card" data-category="college" data-city="Шолоховский район" data-url="https://bktt.ru/">
+        <h3>Белокалитвинский технологический техникум (р.п. Шолоховский)</h3>
+        <p><strong>Город:</strong> р.п. Шолоховский</p>
+        <p><strong>Специальности:</strong> Сварщик, Повар-кондитер, Строитель.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 35 000 – 55 000 ₽</p>
+        <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+        <a class="site-btn" href="https://bktt.ru/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+
+      <!-- ================= РОСТОВ-НА-ДОНУ ================= -->
+      <div class="card" data-category="university" data-city="Ростов-на-Дону" data-url="https://sfedu.ru/">
+        <h3>Южный федеральный университет (ЮФУ)</h3>
+        <p><strong>Город:</strong> Ростов-на-Дону</p>
+        <p><strong>Направления:</strong> IT, Инженерия, Педагогика, Экономика.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 60 000 – 150 000 ₽</p>
+        <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+        <a class="site-btn" href="https://sfedu.ru/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+      <div class="card" data-category="university" data-city="Ростов-на-Дону" data-url="https://donstu.ru/">
+        <h3>Донской государственный технический университет (ДГТУ)</h3>
+        <p><strong>Город:</strong> Ростов-на-Дону</p>
+        <p><strong>Направления:</strong> Машиностроение, Строительство, IT, Дизайн.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 55 000 – 140 000 ₽</p>
+        <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+        <a class="site-btn" href="https://donstu.ru/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+      <div class="card" data-category="university" data-city="Ростов-на-Дону" data-url="https://rostgmu.ru/">
+        <h3>Ростовский государственный медицинский университет (РостГМУ)</h3>
+        <p><strong>Город:</strong> Ростов-на-Дону</p>
+        <p><strong>Направления:</strong> Лечебное дело, Педиатрия, Стоматология.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 90 000 – 110 000 ₽</p>
+        <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+        <a class="site-btn" href="https://rostgmu.ru/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+      <div class="card" data-category="university" data-city="Ростов-на-Дону" data-url="https://rsue.ru/">
+        <h3>Ростовский государственный экономический университет (РИНХ)</h3>
+        <p><strong>Город:</strong> Ростов-на-Дону</p>
+        <p><strong>Направления:</strong> Экономика, Финансы, Менеджмент, IT.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 50 000 – 120 000 ₽</p>
+        <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+        <a class="site-btn" href="https://rsue.ru/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+      <div class="card" data-category="university" data-city="Ростов-на-Дону" data-url="https://rgups.ru/">
+        <h3>Ростовский государственный университет путей сообщения (РГУПС)</h3>
+        <p><strong>Город:</strong> Ростов-на-Дону</p>
+        <p><strong>Направления:</strong> Железнодорожные, Логистика, IT.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 50 000 – 110 000 ₽</p>
+        <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+        <a class="site-btn" href="https://rgups.ru/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+      <div class="card" data-category="college" data-city="Ростов-на-Дону" data-url="https://rksi.ru/">
+        <h3>Ростовский-на-Дону колледж связи и информатики (РКСИ)</h3>
+        <p><strong>Город:</strong> Ростов-на-Дону</p>
+        <p><strong>Специальности:</strong> Программирование, Сети связи.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 45 000 – 90 000 ₽</p>
+        <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+        <a class="site-btn" href="https://rksi.ru/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+      <div class="card" data-category="college" data-city="Ростов-на-Дону" data-url="https://donpedcollege.ru/">
+        <h3>Донской педагогический колледж (ДПК)</h3>
+        <p><strong>Город:</strong> Ростов-на-Дону</p>
+        <p><strong>Специальности:</strong> Начальные классы, Дошкольное.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 30 000 – 55 000 ₽</p>
+        <span class="tag">Бюджет</span>
+        <a class="site-btn" href="https://donpedcollege.ru/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+      <div class="card" data-category="college" data-city="Ростов-на-Дону" data-url="https://рктм.рф/">
+        <h3>Ростовский колледж технологий машиностроения (РКТМ)</h3>
+        <p><strong>Город:</strong> Ростов-на-Дону</p>
+        <p><strong>Специальности:</strong> Машиностроение, Сварка, ЧПУ.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 40 000 – 75 000 ₽</p>
+        <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+        <a class="site-btn" href="https://рктм.рф/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+      <div class="card" data-category="college" data-city="Ростов-на-Дону" data-url="https://rsk-rostov.ru/">
+        <h3>Ростовский строительный колледж (РСК)</h3>
+        <p><strong>Город:</strong> Ростов-на-Дону</p>
+        <p><strong>Специальности:</strong> Строительство, Архитектура.</p>
+        <p class="salary"><strong>Средняя зарплата:</strong> 40 000 – 70 000 ₽</p>
+        <span class="tag">Бюджет</span><span class="tag">Общежитие</span>
+        <a class="site-btn" href="https://rsk-rostov.ru/" target="_blank" rel="noopener" onclick="event.stopPropagation()">🌐 Перейти на сайт →</a>
+      </div>
+
+    </div>
   </div>
 </div>
 
@@ -409,31 +506,92 @@ footer { text-align: center; padding: 40px 20px; margin-top: 80px;
 
 <script>
 var map = L.map('map').setView([48.0, 40.5], 8);
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-  attribution: '&copy; OpenStreetMap &copy; CARTO'
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 19,
+  attribution: '&copy; OpenStreetMap contributors'
 }).addTo(map);
-L.marker([48.17, 40.80]).addTo(map).bindPopup('<b>Белая Калитва</b>').openPopup();
-L.marker([48.32, 40.26]).addTo(map).bindPopup('<b>Каменск-Шахтинский</b>');
-L.marker([47.42, 40.09]).addTo(map).bindPopup('<b>Новочеркасск</b>');
-L.marker([47.71, 40.21]).addTo(map).bindPopup('<b>Шахты</b>');
-L.marker([47.21, 38.93]).addTo(map).bindPopup('<b>Таганрог</b>');
-L.marker([49.63, 41.73]).addTo(map).bindPopup('<b>Вешенская</b>');
-L.marker([47.23, 39.72]).addTo(map).bindPopup('<b>Ростов-на-Дону</b>');
 
-function filterCards(category, city, event) {
-  if (event) {
-    const parent = event.target.parentElement;
-    parent.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    event.target.classList.add('active');
+var cities = [
+  { name: 'Белая Калитва', coords: [48.17, 40.80] },
+  { name: 'Каменск-Шахтинский', coords: [48.32, 40.26] },
+  { name: 'Новочеркасск', coords: [47.42, 40.09] },
+  { name: 'Шахты', coords: [47.71, 40.21] },
+  { name: 'Таганрог', coords: [47.21, 38.93] },
+  { name: 'Шолоховский район', coords: [49.63, 41.73] },
+  { name: 'Ростов-на-Дону', coords: [47.23, 39.72] }
+];
+
+cities.forEach(function(city) {
+  var marker = L.marker(city.coords).addTo(map);
+  marker.bindPopup(
+    '<b>' + city.name + '</b><br>' +
+    '<button class="city-popup-btn" onclick="selectCityFromMap(\'' + city.name + '\')">Показать учебные заведения</button>'
+  );
+});
+
+window.selectCityFromMap = function(cityName) {
+  var btns = document.querySelectorAll('#cityFilters .filter-btn');
+  btns.forEach(function(b) {
+    if (b.textContent.trim() === cityName ||
+        (cityName === 'Каменск-Шахтинский' && b.textContent.trim() === 'Каменск') ||
+        (cityName === 'Шолоховский район' && b.textContent.trim() === 'Шолоховский') ||
+        (cityName === 'Ростов-на-Дону' && b.textContent.trim() === 'Ростов')) {
+      selectCity(cityName, { target: b });
+    }
+  });
+};
+
+let currentCity = null;
+let currentType = 'all';
+
+function selectCity(city, event) {
+  currentCity = city;
+  document.querySelectorAll('#cityFilters .filter-btn').forEach(b => b.classList.remove('active'));
+  if (event && event.target) event.target.classList.add('active');
+
+  document.getElementById('placeholder').style.display = 'none';
+  document.getElementById('cardsArea').style.display = 'block';
+
+  currentType = 'all';
+  document.querySelectorAll('#cardsArea .filter-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('#cardsArea .filter-btn')[0].classList.add('active');
+
+  var found = cities.find(function(c) { return c.name === city; });
+  if (found) {
+    map.flyTo(found.coords, 11, { duration: 1.5 });
   }
+
+  applyFilters();
+
+  setTimeout(function() {
+    document.getElementById('cardsArea').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 300);
+}
+
+function selectType(type, event) {
+  currentType = type;
+  document.querySelectorAll('#cardsArea .filter-btn').forEach(b => b.classList.remove('active'));
+  if (event) event.target.classList.add('active');
+  applyFilters();
+}
+
+function applyFilters() {
   document.querySelectorAll('.card').forEach(card => {
     const c = card.getAttribute('data-category');
     const ct = card.getAttribute('data-city');
-    const catOk = (category === 'all' || c === category);
-    const cityOk = (city === 'all' || ct === city || ct === 'all');
+    const catOk = (currentType === 'all' || c === currentType);
+    const cityOk = (ct === currentCity);
     card.style.display = (catOk && cityOk) ? 'flex' : 'none';
   });
 }
+
+document.addEventListener('click', function(e) {
+  const card = e.target.closest('.card');
+  if (!card) return;
+  if (e.target.closest('.site-btn')) return;
+  const url = card.getAttribute('data-url');
+  if (url) window.open(url, '_blank', 'noopener');
+});
 
 const questions = [
   { q: "Что нравится делать в свободное время?", a: [
@@ -567,74 +725,7 @@ async function calculateQuizResult() {
   document.getElementById('quiz-result').scrollIntoView({ behavior: 'smooth' });
 }
 
-const emojiQuestions = [
-  { emoji: "👨‍🍳🍳🥘", answer: "Повар", options: ["Повар", "Врач", "Сварщик", "Учитель"] },
-  { emoji: "👨‍⚕️💉🏥", answer: "Врач", options: ["Врач", "Повар", "Дизайнер", "Электрик"] },
-  { emoji: "👨‍💻💻⌨️", answer: "Программист", options: ["Программист", "Сварщик", "Пекарь", "Водитель"] },
-  { emoji: "👷‍♂️🔨🏗️", answer: "Строитель", options: ["Строитель", "Повар", "Актёр", "Певец"] },
-  { emoji: "👩‍🏫📚✏️", answer: "Учитель", options: ["Учитель", "Программист", "Сварщик", "Фотограф"] },
-  { emoji: "👨‍🔧🔧🚗", answer: "Автомеханик", options: ["Автомеханик", "Парикмахер", "Врач", "Повар"] },
-  { emoji: "👩‍🎨🎨🖌️", answer: "Художник", options: ["Художник", "Инженер", "Медсестра", "Логист"] },
-  { emoji: "👮‍♂️🚔🚨", answer: "Полицейский", options: ["Полицейский", "Пекарь", "Программист", "Дизайнер"] },
-  { emoji: "✈️👨‍✈️🛫", answer: "Пилот", options: ["Пилот", "Сварщик", "Официант", "Юрист"] },
-  { emoji: "👩‍🔬🔬🧪", answer: "Химик", options: ["Химик", "Фотограф", "Сварщик", "Повар"] }
-];
-
-let currentGameIndex = 0, gameScore = 0, gameTotal = 0, answered = false;
-function shuffle(arr) { return arr.sort(() => Math.random() - 0.5); }
-
-function loadEmojiQuestion() {
-  if (currentGameIndex >= emojiQuestions.length) {
-    document.getElementById('emojiDisplay').textContent = "🎉";
-    document.getElementById('gameOptions').innerHTML = '';
-    document.getElementById('gameFeedback').textContent = `Игра окончена! Счёт: ${gameScore}/${gameTotal}`;
-    document.getElementById('nextBtn').style.display = 'none';
-    return;
-  }
-  answered = false;
-  const q = emojiQuestions[currentGameIndex];
-  document.getElementById('emojiDisplay').textContent = q.emoji;
-  document.getElementById('gameFeedback').textContent = '';
-  const optsDiv = document.getElementById('gameOptions');
-  optsDiv.innerHTML = '';
-  shuffle([...q.options]).forEach(opt => {
-    const btn = document.createElement('button');
-    btn.className = 'game-option';
-    btn.textContent = opt;
-    btn.onclick = () => checkEmojiAnswer(btn, opt, q.answer);
-    optsDiv.appendChild(btn);
-  });
-  document.getElementById('nextBtn').style.display = 'none';
-  document.getElementById('gameTotal').textContent = gameTotal;
-  document.getElementById('gameScore').textContent = gameScore;
-}
-
-function checkEmojiAnswer(btn, chosen, correct) {
-  if (answered) return;
-  answered = true;
-  gameTotal++;
-  document.getElementById('gameTotal').textContent = gameTotal;
-  if (chosen === correct) {
-    btn.classList.add('correct');
-    gameScore++;
-    document.getElementById('gameFeedback').textContent = "Правильно!";
-    document.getElementById('gameFeedback').style.color = "var(--ok)";
-  } else {
-    btn.classList.add('wrong');
-    document.querySelectorAll('.game-option').forEach(b => {
-      if (b.textContent === correct) b.classList.add('correct');
-    });
-    document.getElementById('gameFeedback').textContent = `Правильно: ${correct}`;
-    document.getElementById('gameFeedback').style.color = "var(--bad)";
-  }
-  document.getElementById('gameScore').textContent = gameScore;
-  document.getElementById('nextBtn').style.display = 'inline-block';
-}
-
-function nextEmojiQuestion() { currentGameIndex++; loadEmojiQuestion(); }
-
 renderQuiz();
-loadEmojiQuestion();
 </script>
 </body>
 </html>
